@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Proxy Minecraft Spoof</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 6px; margin-top: 4px; }
+    button { margin-top: 15px; padding: 10px; width: 100%; font-size: 16px; }
+    #log { margin-top: 20px; height: 150px; overflow-y: scroll; background: #111; color: #0f0; padding: 10px; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h2>Proxy Minecraft Spoof</h2>
+  <label>IP serveur backend :
+    <input id="backendHost" type="text" value="91.197.6.60" />
+  </label>
+  <label>Port serveur backend :
+    <input id="backendPort" type="number" value="25586" />
+  </label>
+  <label>Port local du proxy :
+    <input id="listenPort" type="number" value="25570" />
+  </label>
+  <label>Pseudo à spoof :
+    <input id="spoofedUsername" type="text" value="GTHusYT" />
+  </label>
+  <label>IP à spoof :
+    <input id="spoofedIP" type="text" value="77.170.235.9" />
+  </label>
+  <button id="startBtn">Démarrer le proxy</button>
+
+  <div id="log"></div>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const logDiv = document.getElementById('log');
+
+    function log(msg) {
+      const p = document.createElement('p');
+      p.textContent = msg;
+      logDiv.appendChild(p);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    window.electronAPI.onLog((message) => {
+      log(message);
+    });
+
+    startBtn.addEventListener('click', async () => {
+      log('🛠️ Démarrage du proxy...');
+      const config = {
+        backendHost: document.getElementById('backendHost').value,
+        backendPort: document.getElementById('backendPort').value,
+        listenPort: document.getElementById('listenPort').value,
+        spoofedUsername: document.getElementById('spoofedUsername').value,
+        spoofedIP: document.getElementById('spoofedIP').value,
+      };
+      const res = await window.electronAPI.startProxy(config);
+      log(res);
+    });
+  </script>
+</body>
+</html>
